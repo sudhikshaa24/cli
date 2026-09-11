@@ -24,6 +24,34 @@ test.describe('Game Listing and Navigation', () => {
     });
   });
 
+  test('should filter games by publisher and category', async ({ page }) => {
+    await page.goto('/');
+
+    const cards = page.getByTestId('game-card');
+    const initialCount = await cards.count();
+    expect(initialCount).toBeGreaterThan(0);
+
+    await test.step('Filter by publisher', async () => {
+      await page.getByTestId('publisher-filter').selectOption({ index: 1 });
+      await expect(page).toHaveURL(/publisher=\d+/);
+      const visibleCards = page.locator('[data-testid="game-card"]:not(.hidden)');
+      expect(await visibleCards.count()).toBeGreaterThan(0);
+      expect(await visibleCards.count()).toBeLessThan(initialCount);
+    });
+
+    await test.step('Combine publisher and category filters', async () => {
+      await page.getByTestId('category-filter').selectOption({ index: 1 });
+      await expect(page).toHaveURL(/category=\d+&publisher=\d+|publisher=\d+&category=\d+/);
+      await expect(page.getByTestId('filter-status')).toContainText('game');
+    });
+
+    await test.step('Clear filters', async () => {
+      await page.getByTestId('clear-filters').click();
+      await expect(page).toHaveURL('/');
+      await expect(cards).toHaveCount(initialCount);
+    });
+  });
+
   test('should navigate to correct game details page when clicking on a game', async ({ page }) => {
     let gameId: string | null;
     let gameTitle: string | null;
