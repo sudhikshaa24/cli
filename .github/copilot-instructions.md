@@ -1,42 +1,7 @@
-# Tailspin Toys Crowd Funding Development Guidelines
 
-This is a crowdfunding platform for games with a developer theme. The application is a single **Astro 7** site (fully prerendered/static output) styled with **Tailwind CSS v4**. Data is stored in a local SQLite database accessed at build time through **Drizzle ORM + Node.js's built-in SQLite driver**; pages query the database directly in frontmatter — there is no separate backend API or client-side UI framework. Please follow these guidelines when contributing:
 
-## Agent notes
-
-- Explore the project before beginning code generation
-- Create todo lists for long operations
-  - Before each step in a todo list, reread the instructions to ensure you always have the right directions
-- Always use instructions files when available, reviewing before generating code
-- Do not generate summary markdown files upon completion of a task
-- Always use absolute paths when running scripts and BASH commands
-- **NEVER commit or push to main automatically unless explicitly instructed to do so**
-
-## Code standards
-
-### Required Before Each Commit
-
-#### Testing guidelines
-
-- **Always run tests and lint through the `quality-checks` skill — never invoke `npm run test:unit`, `npm run test:e2e`, or `npm run lint` directly.** The skill wraps environment setup, ordering, and troubleshooting. (Starting the app for manual validation is not a quality check — run `npm run dev` directly for that.)
-- Run Vitest unit tests to verify the data layer and transforms, and Playwright tests to verify e2e and frontend functionality
-- Run ESLint to check frontend code quality before committing
-- Review the existing tests to ensure we're not duplicating efforts
-- Test code should be of the same quality as the rest of the project, and follow DRY principles
-- For frontend changes, verify the build (`npm run build`) directly, and run the end-to-end tests through the `quality-checks` skill, to ensure everything works correctly
-- When changing the data layer (schema, helpers, transforms), update and run the corresponding unit tests
-
-#### Project guidelines
-
-- When updating the database schema, generate and commit the drizzle-kit migration (`npm run db:generate`)
-- When adding new functionality, make sure you update the README
-- Make sure all guidance in the Copilot Instructions file is updated with any relevant changes, including to project structure and scripts, and programming guidance
-
-### Code formatting requirements
-
-- Use TypeScript with explicit types for function parameters and return values, especially in the data layer (`db/`, `src/lib/`)
-- Frontend code (TypeScript, Astro) must pass ESLint checks (`npm run lint`)
-
+- Every exported function should have a TSDoc comment describing its purpose, parameters, and return value.
+- Before imports or any code, add a comment block to the file that explains its purpose.
 ### Data Layer Patterns (Drizzle + Node SQLite)
 
 - Define tables in `db/schema.ts`; manage schema changes with drizzle-kit migrations - see `drizzle.instructions.md`
